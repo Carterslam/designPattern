@@ -7,6 +7,7 @@ design pattern code
  
 
 ##《简介》
+--------------
 说到设计模式，当初第一次听到时，第一反应就是很深奥，完全理解不了这个概念到底是什么意思，下面我先从网上摘录一份定义。
 
 设计模式（Designpattern）是一套被反复使用、多数人知晓的、经过分类编目的、代码设计经验的总结。
@@ -26,6 +27,7 @@ design pattern code
        
 
 ##《为何学习设计模式》
+--------------
  
 
 上面简单的介绍，是让各位首先搞清楚设计模式是什么，下面我们来说说为什么要学习设计模式，学习总要有个驱动力。
@@ -37,7 +39,7 @@ design pattern code
  
 
 ##《设计模式的好处及注意点》
- 
+ --------------
 
 设计模式可以帮助我们改善系统的设计，增强系统的健壮性、可扩展性，为以后铺平道路。
 
@@ -48,8 +50,8 @@ design pattern code
  
 
 ##《指导原则：六大规则》
+--------------
  
-
 在学习设计模式之前，为了不让设计模式显得很模式，我们还必须了解一个东西，那就是程序设计六大原则。
 
 这些原则是指导模式的规则，我会给一些原则附上一个例子，来说明这个原则所要表达的意思，注意，原则是死的，人是活的，所以并不是要你完完全全遵守这些规则，否则为何数据库会有逆范式，只是在可能的情况下，请尽量遵守。
@@ -60,27 +62,27 @@ design pattern code
 否则当你去维护这个系统的时候，你会后悔你当初的决定，下面是我自己思索的例子，给各位参考一下，给出代码。
 
 
-				import java.io.BufferedReader;
-				import java.io.File;
-				import java.io.FileReader;
-				import java.io.IOException;
+	import java.io.BufferedReader;
+	import java.io.File;
+	import java.io.FileReader;
+	import java.io.IOException;
 
 
-				public class Calculator {
+	public class Calculator {
 
-				    public int add() throws NumberFormatException, IOException{
-				        File file = new File("E:/data.txt");
-				        BufferedReader br = new BufferedReader(new FileReader(file));
-				        int a = Integer.valueOf(br.readLine());
-				        int b = Integer.valueOf(br.readLine());
-				        return a+b;
-				    }
-				    
-				    public static void main(String[] args) throws NumberFormatException, IOException {
-				        Calculator calculator = new Calculator();
-				        System.out.println("result:" + calculator.add());
-				    }
-				}
+	    public int add() throws NumberFormatException, IOException{
+	        File file = new File("E:/data.txt");
+	        BufferedReader br = new BufferedReader(new FileReader(file));
+	        int a = Integer.valueOf(br.readLine());
+	        int b = Integer.valueOf(br.readLine());
+	        return a+b;
+	    }
+	    
+	    public static void main(String[] args) throws NumberFormatException, IOException {
+	        Calculator calculator = new Calculator();
+	        System.out.println("result:" + calculator.add());
+	    }
+	}
 
 来看上面这个例子，这个方法的作用是从一个文件中读出两个数，并返回它们的和，我相信各位也能看出当中有明显的多职责问题。如果没看出来的话，我想问各位一句，如果我想算这个文件中两个数字的差该如何做？
 
@@ -89,53 +91,53 @@ design pattern code
 我们分离出来一个类用来读取数据，来看Reader。
 
 
-				package com.test;
+	package com.test;
 
-				import java.io.BufferedReader;
-				import java.io.File;
-				import java.io.FileReader;
-				import java.io.IOException;
+	import java.io.BufferedReader;
+	import java.io.File;
+	import java.io.FileReader;
+	import java.io.IOException;
 
 
-				public class Reader {
-				    
-				    int a,b;
-				    
-				    public Reader(String path) throws NumberFormatException, IOException{
-				        BufferedReader br = new BufferedReader(new FileReader(new File(path)));
-				        a = Integer.valueOf(br.readLine());
-				        b = Integer.valueOf(br.readLine());
-				    }
-				    
-				    public int getA(){
-				        return a;
-				    }
-				    
-				    public int getB(){
-				        return b;
-				    }
-				}
+	public class Reader {
+	    
+	    int a,b;
+	    
+	    public Reader(String path) throws NumberFormatException, IOException{
+	        BufferedReader br = new BufferedReader(new FileReader(new File(path)));
+	        a = Integer.valueOf(br.readLine());
+	        b = Integer.valueOf(br.readLine());
+	    }
+	    
+	    public int getA(){
+	        return a;
+	    }
+	    
+	    public int getB(){
+	        return b;
+	    }
+	}
 
 下面是我们单独的计算器类。
 
 
-				package com.test;
-				import java.io.IOException;
+	package com.test;
+	import java.io.IOException;
 
 
-				public class Calculator {
+	public class Calculator {
 
-				    public int add(int a,int b){
-				        return a + b;
-				    }
-				    
-				    public static void main(String[] args) throws NumberFormatException, IOException {
-				        Reader reader = new Reader("E:/data.txt");
-				        Calculator calculator = new Calculator();
-				        System.out.println("result:" + calculator.add(reader.getA(),reader.getB()));
-				    }
-				    
-				}
+	    public int add(int a,int b){
+	        return a + b;
+	    }
+	    
+	    public static void main(String[] args) throws NumberFormatException, IOException {
+	        Reader reader = new Reader("E:/data.txt");
+	        Calculator calculator = new Calculator();
+	        System.out.println("result:" + calculator.add(reader.getA(),reader.getB()));
+	    }
+	    
+	}
 
 我们将一个类拆成了两个类，这样以后我们如果有减法，乘法等等，就不用出现那么多重复代码了。
 
@@ -153,44 +155,44 @@ design pattern code
 
 
 //某一个类
-				public class SomeoneClass {
-				    //有某一个方法，使用了一个父类类型
-				    public void someoneMethod(Parent parent){
-				        parent.method();
-				    }
-				}
+	public class SomeoneClass {
+	    //有某一个方法，使用了一个父类类型
+	    public void someoneMethod(Parent parent){
+	        parent.method();
+	    }
+	}
 
 父类代码如下。
 
-				public class Parent {
+	public class Parent {
 
-				    public void method(){
-				        System.out.println("parent method");
-				    }
-				}
+	    public void method(){
+	        System.out.println("parent method");
+	    }
+	}
 结果我有一个子类把父类的方法给覆盖了，并且抛出了一个异常。
 
 
-				public class SubClass extends Parent{
+	public class SubClass extends Parent{
 
-				    //结果某一个子类重写了父类的方法，说不支持该操作了
-				    public void method() {
-				        throw new UnsupportedOperationException();
-				    }
-				    
-				}
+	    //结果某一个子类重写了父类的方法，说不支持该操作了
+	    public void method() {
+	        throw new UnsupportedOperationException();
+	    }
+	    
+	}
 
 这个异常是运行时才会产生的，也就是说，我的SomeoneClass并不知道会出现这种情况，结果就是我调用下面这段代码的时候，本来我们的思维是Parent都可以传给someoneMethod完成我的功能，我的SubClass继承了Parent，当然也可以了，但是最终这个调用会抛出异常。
 
 
-				public class Client {
+	public class Client {
 
-				    public static void main(String[] args) {
-				        SomeoneClass someoneClass = new SomeoneClass();
-				        someoneClass.someoneMethod(new Parent());
-				        someoneClass.someoneMethod(new SubClass());
-				    }
-				}
+	    public static void main(String[] args) {
+	        SomeoneClass someoneClass = new SomeoneClass();
+	        someoneClass.someoneMethod(new Parent());
+	        someoneClass.someoneMethod(new SubClass());
+	    }
+	}
 
 这就相当于埋下了一个个陷阱，因为本来我们的原则是，父类可以完成的地方，我用子类替代是绝对没有问题的，但是这下反了，我每次使用一个子类替换一个父类的时候，我还要担心这个子类有没有给我埋下一个上面这种炸弹。
 
@@ -207,25 +209,26 @@ design pattern code
 上面就是接口隔离原则这个挑剔女所挑剔的地方，假设你没有满足她，你或许会写出下面这样的手机接口。
 
 
-				public interface Mobile {
+	public interface Mobile {
 
-				    public void call();//手机可以打电话
-				    
-				    public void sendMessage();//手机可以发短信
-				    
-				    public void playBird();//手机可以玩愤怒的小鸟？
-				    
-				}
+	    public void call();//手机可以打电话
+	    
+	    public void sendMessage();//手机可以发短信
+	    
+	    public void playBird();//手机可以玩愤怒的小鸟？
+	    
+	}
 
 上面第三个行为明显就不是一个手机应该有的，或者说不是一个手机必须有的，那么上面这个手机的接口就不是最小接口，假设我现在的非智能手机去实现这个接口，那么playBird方法就只能空着了，因为它不能玩。
 
 所以我们更好的做法是去掉这个方法，让Mobile接口最小化，然后再建立下面这个接口去扩展现有的Mobile接口。
 
-				public interface SmartPhone extends Mobile{
+	public interface SmartPhone extends Mobile{
 
-				    public void playBird();//智能手机的接口就可以加入这个方法了
-				    
-				}
+	    public void playBird();//智能手机的接口就可以加入这个方法了
+	    
+	}
+	
 这样两个接口就都是最小化的了，这样我们的非智能手机就去实现Mobile接口，实现打电话和发短信的功能，而智能手机就实现SmartPhone接口，实现打电话、发短信以及玩愤怒的小鸟的功能，两者都不会有多余的要实现的方法。
 
 最小接口原则一般我们是要尽量满足的，如果实在有多余的方法，我们也有补救的办法，而且有的时候也确实不可避免的有一些实现类无法全部实现接口中的方法，这时候就轮到缺省适配器上场了，这个在后面再介绍。
@@ -244,12 +247,13 @@ design pattern code
 
 针对上面简单的数据读取，我们可以定义如下接口去描述。
 
-				public interface Reader {
+	public interface Reader {
 
-				    public int getA();
-				    
-				    public int getB();
-				}
+	    public int getA();
+	    
+	    public int getB();
+	}
+	
 让我们原来的Reader改名为FileReader去实现这个接口，这样计算器就依赖于抽象的接口，这个依赖是非常稳定的，因为不论你以后要从哪读取数据，你的两个获取数据的方法永远都不会变。
 
 这样，我们让DBReader，XMLReader，NETReader，StandardOutPutStreamReader等等，都可以实现Reader这个接口，而我们的客户端调用依赖于一个Reader，这样不管数据是从哪来的，我们都可以应对自如，因为我根本不关心你是什么Reader，我只知道你能让我获得A和B这两个值就行了。
@@ -265,90 +269,90 @@ design pattern code
 比如我把上述的例子改变一下。
 
 
-				import java.io.BufferedReader;
-				import java.io.File;
-				import java.io.FileNotFoundException;
-				import java.io.FileReader;
-				import java.io.IOException;
+	import java.io.BufferedReader;
+	import java.io.File;
+	import java.io.FileNotFoundException;
+	import java.io.FileReader;
+	import java.io.IOException;
 
 
-				public class Reader {
-				    
-				    int a,b;
-				    
-				    private String path;
-				    
-				    private BufferedReader br;
-				    
-				    public Reader(String path){
-				        this.path = path;
-				    }
-				    
-				    public void setBufferedReader() throws FileNotFoundException{
-				        br = new BufferedReader(new FileReader(new File(path)));
-				    }
-				    
-				    public void readLine() throws NumberFormatException, IOException{
-				        a = Integer.valueOf(br.readLine());
-				        b = Integer.valueOf(br.readLine());
-				    }
-				    
-				    public int getA(){
-				        return a;
-				    }
-				    
-				    public int getB(){
-				        return b;
-				    }
-				}
+	public class Reader {
+	    
+	    int a,b;
+	    
+	    private String path;
+	    
+	    private BufferedReader br;
+	    
+	    public Reader(String path){
+	        this.path = path;
+	    }
+	    
+	    public void setBufferedReader() throws FileNotFoundException{
+	        br = new BufferedReader(new FileReader(new File(path)));
+	    }
+	    
+	    public void readLine() throws NumberFormatException, IOException{
+	        a = Integer.valueOf(br.readLine());
+	        b = Integer.valueOf(br.readLine());
+	    }
+	    
+	    public int getA(){
+	        return a;
+	    }
+	    
+	    public int getB(){
+	        return b;
+	    }
+	}
 
 Reader类改成上述这个样子，显然它给其他的类透漏了太多细节，让别人知道了它的太多细节，这样我客户端调用的时候就很可能写成如下形式。
 
 
-				public class Client {
+	public class Client {
 
-				    public static void main(String[] args) throws Exception {
-				        Reader reader = new Reader("E:/test.txt");
-				        reader.setBufferedReader();
-				        reader.readLine();
-				        int a = reader.getA();
-				        int b = reader.getB();
-				        //以下用于计算等等
-				    }
-				}
+	    public static void main(String[] args) throws Exception {
+	        Reader reader = new Reader("E:/test.txt");
+	        reader.setBufferedReader();
+	        reader.readLine();
+	        int a = reader.getA();
+	        int b = reader.getB();
+	        //以下用于计算等等
+	    }
+	}
 
 这样客户端就依赖于reader的多个行为才能最终获取到A和B两个数值，这时候两个类的耦合度就太高了，我们更好的做法使用访问权限限制将二者都给隐藏起来不让外部调用的类知道这些。就像下面这样。
 
 
-				public class Reader {
+	public class Reader {
 
-				    int a,b;
-				    private String path;
-				    private BufferedReader br;
-				    public Reader(String path) throws Exception{
-				        super();
-				        this.path = path;
-				        setBufferedReader();
-				        readLine();
-				    }
-				    //注意，我们变为私有的方法
-				    private void setBufferedReader() throws FileNotFoundException{
-				        br = new BufferedReader(new FileReader(path));
-				    }
-				    //注意，我们变为私有的方法
-				    private void readLine() throws NumberFormatException, IOException{
-				        a = Integer.valueOf(br.readLine());
-				        b = Integer.valueOf(br.readLine());
-				    }
-				    
-				    public int getA(){
-				        return a;
-				    }
-				    
-				    public int getB(){
-				        return b;
-				    }
-				}
+	    int a,b;
+	    private String path;
+	    private BufferedReader br;
+	    public Reader(String path) throws Exception{
+	        super();
+	        this.path = path;
+	        setBufferedReader();
+	        readLine();
+	    }
+	    //注意，我们变为私有的方法
+	    private void setBufferedReader() throws FileNotFoundException{
+	        br = new BufferedReader(new FileReader(path));
+	    }
+	    //注意，我们变为私有的方法
+	    private void readLine() throws NumberFormatException, IOException{
+	        a = Integer.valueOf(br.readLine());
+	        b = Integer.valueOf(br.readLine());
+	    }
+	    
+	    public int getA(){
+	        return a;
+	    }
+	    
+	    public int getB(){
+	        return b;
+	    }
+	}
 
 我们最终将两个方法都变为私有封装在Reader类当中，这样外部的类就无法知道这两个方法了，所以迪米特原则虽说是指的一个类应当尽量不要知道其他类太多细节，但其实更重要的是一个类应当不要让外部的类知道自己太多。两者是相辅相成的，只要你将类的封装性做的很好，那么外部的类就无法依赖当中的细节。
 
